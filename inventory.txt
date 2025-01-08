@@ -1,0 +1,5 @@
+Ingrediente,Quantidade
+Burger Patty,20
+Pizza Dough,15
+Pasta,25
+Salad Greens,30
