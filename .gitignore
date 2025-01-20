@@ -1,0 +1,7 @@
+main
+sales.log
+
+.vscode/
+
+*.o
+*.a

@@ -3,15 +3,12 @@
 
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <map>
-#include <fstream>
-#include <sstream>
-#include <thread>
-#include <chrono>
 #include <string>
 #include "ConfigReader.h"
-#include "Sales.h"  // Adicionar inclusão do header de Sales
+#include "Sales.h"
+
+class ConfigReader;
 
 using namespace std;
 
@@ -21,10 +18,11 @@ private:
     vector<int> itemIds;
     string customization;
     string status;
+    static vector<MenuItem> menu;
+    static map<string, int> inventory;
 
     int placeOrder();
     void processOrders() const;
-    void generateBill() const;
     void manageInventory();
     void notifyKitchen() const;
 

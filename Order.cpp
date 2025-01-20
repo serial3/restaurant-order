@@ -1,19 +1,15 @@
 #include "Order.h"
-#include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <map>
-#include <string>
-#include <functional>
-#include <queue>
-#include <chrono>
 #include <thread>
-#include <stdexcept>
-#include "ConfigReader.h"  // Inclua o header do ConfigReader
+#include <chrono>
+#include <queue>
 
 ConfigReader configReader;
-Sales sales;  // Instância da classe Sales
+Sales sales;
+
+vector<MenuItem> Order::menu = configReader.loadMenuFromFile("menu.txt");
+map<string, int> Order::inventory = configReader.loadInventoryFromFile("inventory.txt");
 
 Order::Order() : orderId(0), customization(""), status("") {}
 
@@ -21,7 +17,6 @@ Order::Order(int orderId, const std::vector<int>& itemIds, const std::string& cu
     : orderId(orderId), itemIds(itemIds), customization(customization), status(status) {}
 
 void Order::displayMenu() const {
-    std::vector<MenuItem> menu = configReader.loadMenuFromFile("menu.txt");
     std::cout << "\n--- Menu ---\n";
 
     for (const auto& item : menu) {
@@ -38,8 +33,7 @@ int Order::placeOrder() {
     std::vector<int> itemIds;
     int itemId;
     std::string customization;
-    std::map<std::string, int> inventory = configReader.loadInventoryFromFile("inventory.txt");
-    
+
     std::cout << "Introduza os IDs dos artigos a encomendar (insira -1 para parar): ";
     while (true) {
         std::cin >> itemId;
@@ -71,8 +65,6 @@ int Order::placeOrder() {
 }
 
 void Order::processOrders() const {
-    std::vector<MenuItem> menu = configReader.loadMenuFromFile("menu.txt");
-    std::map<std::string, int> inventory = configReader.loadInventoryFromFile("inventory.txt");
     std::queue<Order> orderQueue;
 
     while (!orderQueue.empty()) {
@@ -85,31 +77,10 @@ void Order::processOrders() const {
 
         currentOrder.status = "Concluída";
         std::cout << "Encomenda ID: " << currentOrder.orderId << " está pronta!\n";
-
-        currentOrder.generateBill();
     }
-}
-
-void Order::generateBill() const {
-    std::vector<MenuItem> menu = configReader.loadMenuFromFile("menu.txt");
-    double total = 0.0;
-    double taxRate = 0.08; // 8% de IVA
-    std::cout << "\n--- Fatura para encomenda ID: " << this->orderId << " ---\n";
-
-    for (int id : this->itemIds) {
-        std::cout << menu[id - 1].name << " - €" << menu[id - 1].price << "\n";
-        total += menu[id - 1].price;
-    }
-
-    total += total * taxRate;
-    std::cout << "IVA (8%): €" << total * taxRate << "\n";
-    std::cout << "Total: €" << total << "\n";
-
-    sales.saveSalesLog(total);  // Atualizar chamada para usar a instância de Sales
 }
 
 void Order::manageInventory() {
-    std::map<std::string, int> inventory = configReader.loadInventoryFromFile("inventory.txt");
     std::cout << "\n--- Inventário ---\n";
     for (const auto& item : inventory) {
         std::cout << item.first << ": " << item.second << "\n";
@@ -120,7 +91,7 @@ void Order::manageInventory() {
     std::cout << "Introduza o ingrediente para repor stock (ou -1 para parar): ";
     while (true) {
         std::cin >> ingredient;
-        if (ingredient == "-1") break;
+        if (ingredient == "1") break;
         std::cout << "Introduza a quantidade: ";
         std::cin >> quantity;
         inventory[ingredient] += quantity;

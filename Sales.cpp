@@ -20,6 +20,23 @@ void Sales::generateSalesReport() const {
     cout << "Total de Vendas: €" << totalSales << endl;
 }
 
+void Sales::generateBill(int orderId, const vector<int>& itemIds, const vector<MenuItem>& menu) const {
+    double total = 0.0;
+    double taxRate = 0.08; // 8% de IVA
+    cout << "\n--- Fatura para encomenda ID: " << orderId << " ---\n";
+
+    for (int id : itemIds) {
+        cout << menu[id - 1].name << " - €" << menu[id - 1].price << "\n";
+        total += menu[id - 1].price;
+    }
+
+    total += total * taxRate;
+    cout << "IVA (8%): €" << total * taxRate << "\n";
+    cout << "Total: €" << total << "\n";
+
+    saveSalesLog(total);  // Chama a função para salvar o log de vendas
+}
+
 void Sales::saveSalesLog(double amount) const {
     writeToFile(amount);
 }
