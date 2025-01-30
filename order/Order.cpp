@@ -25,7 +25,7 @@ void Order::displayMenu() const {
     }
 
     if (menu.empty()) {
-        std::cout << "Menu is empty!\n";
+        std::cout << "Menu está vazio!\n";
     }
 }
 

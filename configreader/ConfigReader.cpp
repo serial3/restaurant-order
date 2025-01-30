@@ -17,7 +17,7 @@ MenuItem ConfigReader::parseMenuItem(const std::string& line) const {
         std::getline(iss, priceStr, ',')) {
         return {std::stoi(idStr), name, std::stod(priceStr)};
     }
-    throw std::runtime_error("Invalid menu item format");
+    throw std::runtime_error("formato de menu inválido");
 }
 
 InventoryItem ConfigReader::parseInventoryItem(const std::string& line) const {
@@ -28,7 +28,7 @@ InventoryItem ConfigReader::parseInventoryItem(const std::string& line) const {
         std::getline(iss, quantityStr, ',')) {
         return {ingredient, std::stoi(quantityStr)};
     }
-    throw std::runtime_error("Invalid inventory item format");
+    throw std::runtime_error("formato de inventário inválido");
 }
 
 template<typename T>
@@ -37,7 +37,7 @@ std::vector<T> ConfigReader::loadFromFile(const std::string& filename, std::func
     std::vector<T> result;
     
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filename);
+        throw std::runtime_error("ficheiro falhou a abrir: " + filename);
     }
 
     std::string line;
@@ -47,7 +47,7 @@ std::vector<T> ConfigReader::loadFromFile(const std::string& filename, std::func
         try {
             result.push_back(parseLine(line));
         } catch (const std::exception& e) {
-            std::cerr << "Error parsing line: " << line << ". Error: " << e.what() << std::endl;
+            std::cerr << "erro ao parsar linha: " << line << ". Erro: " << e.what() << std::endl;
         }
     }
 
